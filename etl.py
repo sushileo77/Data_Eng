@@ -55,13 +55,15 @@ def process_log_file(cur, filepath):
         results = cur.fetchone()
         
         if results:
+            #print(results)
             songid, artistid = results
         else:
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = (None,row.ts,row.userId,row.level,songid,artistid,row.sessionId,row.location,row.userAgent)
-        #songplay_data = (None,None,None,None,songid,artistid,None,None,None)
+        #print(row)
+        songplay_data = (row.ts,row.userId,row.level,songid,artistid,row.sessionId,row.location,row.userAgent)
+        
         cur.execute(songplay_table_insert, songplay_data)
 
 
@@ -75,11 +77,10 @@ def process_data(cur, conn, filepath, func):
 
     # get total number of files found
     num_files = len(all_files)
-    print('{} files found in {}'.format(num_files, filepath))
-
+    
     # iterate over files and process
     for i, datafile in enumerate(all_files, 1):
-        print("DataFile {}".format(datafile))
+        #print("DataFile {}".format(datafile))
         func(cur, datafile)
         conn.commit()
         print('{}/{} files processed.'.format(i, num_files))
