@@ -20,7 +20,7 @@ song_table_create     = ("CREATE TABLE IF NOT EXISTS songs (\
     title varchar,\
     artist_id varchar,\
     year int,\
-    duration int)")
+    duration float)")
 
 artist_table_create   = ("CREATE TABLE IF NOT EXISTS artists (\
     artist_id varchar PRIMARY KEY,\
@@ -81,7 +81,7 @@ ON CONFLICT(start_time) DO NOTHING ")
 
 # FIND SONGS
 # Join ON song.artist_id and artists.artist_id and corresponding WHERE clause
-song_select = ("""SELECT songs.song_id, artists.artist_id FROM songs JOIN artists ON songs.artist_id = artists.artist_id WHERE songs.title = (%s) AND artists.artist_name = (%s) AND songs.duration = (%s)""")
+song_select = ("""SELECT songs.song_id, artists.artist_id FROM artists join songs ON artists.artist_id = songs.artist_id WHERE songs.title = (%s) AND artists.artist_name = (%s) AND songs.duration = (%s)""")
  
 # QUERY LISTS
 
