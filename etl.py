@@ -26,6 +26,7 @@ def process_log_file(cur, filepath):
     # open log file
     df = pd.read_json(filepath, lines=True)
 
+    
     # filter by NextSong action
     df = df.loc[df['page'].isin(['NextSong'])]
 
@@ -49,21 +50,22 @@ def process_log_file(cur, filepath):
 
     # insert songplay records
     for index, row in df.iterrows():
-        
+        #print(row)
         # get songid and artistid from song and artist tables
+        #print(row.song, row.artist, row.length)
         cur.execute(song_select, (row.song, row.artist, row.length))
         results = cur.fetchone()
         
         if results:
             #print(results)
-            songid, artistid = results
+            songid,artistid = results
+            #print(songid,artistid)
         else:
             songid, artistid = None, None
 
         # insert songplay record
         #print(row)
-        songplay_data = (row.ts,row.userId,row.level,songid,artistid,row.sessionId,row.location,row.userAgent)
-        
+        songplay_data = (pd.to_datetime(row.ts, unit='ms'),row.userId,row.level,songid,artistid,row.sessionId,row.location,row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
 
